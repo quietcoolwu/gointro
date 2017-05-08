@@ -2,76 +2,83 @@ package main
 
 import "fmt"
 
-type empry interface {
+type empty interface {
 }
 
 type Connector interface {
 	Connect()
 }
 
-type USB interface {
+type USBConnector interface {
 	Connector
 	Name() string
 }
 
-type PhoneConnector struct {
+type Phone struct {
+	name   string
+	screen float64
+}
+
+type TV struct {
 	name string
+	size float64
 }
 
-func (phone PhoneConnector) Name() string {
-	return phone.name
+func (p Phone) Name() string {
+	return p.name
 }
 
-func (phone PhoneConnector) Connect() {
-	fmt.Println("Connected: ", phone.name)
+func (p Phone) Connect() {
+	fmt.Println("Phone Connected: ", p.name, p.screen)
+}
+
+func (tv TV) Connect() {
+	fmt.Println("TV Connected: ", tv.name, tv.size)
 }
 
 func Disconnect(dock interface{}) {
-	// if phone, ok := dock.(PhoneConnector); ok {
-	// 	fmt.Println("Disconnected: ", phone.name)
-	// 	return
-	// }
 
 	switch device := dock.(type) {
-	case PhoneConnector:
-		fmt.Println("Disconnected: ", device.name)
+	case Phone:
+		fmt.Println("Disconnected Phone: ", device.name, device.screen)
+	case TV:
+		fmt.Println("Disconnected TV: ", device.name, device.size)
 	default:
 		fmt.Println("Unknown Device")
 	}
-
-}
-
-type TVConnector struct {
-	name string
-	size int
-}
-
-func (tv TVConnector) Connect() {
-	fmt.Println("Connected: ", tv.name)
 }
 
 func TestPhone() {
 	// var dock1 USB
-	dock1 := PhoneConnector{
-		name: "Phone1",
-	}
-	fmt.Println(dock1.Name())
-	dock1.Connect()
-	Disconnect(dock1)
+	phone1 := Phone{"Phone1", 5.5}
 
-	dock2 := Connector(dock1)
+	// Issues on copy
+	dock2 := USBConnector(phone1)
+	// dock2 = Connector(phone1)
+	fmt.Println(dock2.Name())
+	phone1.name = "Phone2"
 	dock2.Connect()
+	Disconnect(dock2)
 
-	// tv := TVConnector{
-	// 	name: "TV1",
-	// 	size: 43,
-	// }
-	//
-	// dock3 := USB(tv)
-	// dock3.Connect()
+	dock3 := Connector(phone1)
+	dock3 = USBConnector(phone1)
+	// Why can't exec?
+	// fmt.Println(dock3.Name())
+	dock3.Connect()
+	Disconnect(dock3)
 
+}
+
+func TestNilInterface() {
+	var a interface{}
+	fmt.Println(a == nil)
+
+	var p *int = nil
+	a = p
+	fmt.Println(a == nil)
 }
 
 func main() {
 	TestPhone()
+	TestNilInterface()
 }
