@@ -2,12 +2,6 @@ package main
 
 import "fmt"
 
-type TZ int
-
-type A struct {
-	Name string
-}
-
 type B struct {
 	Name string
 }
@@ -15,16 +9,26 @@ type B struct {
 func main() {
 	a := A{}
 	a.Prt()
-	// fmt.Println(a.Name)
+	a.name = "123"
+	a.Prt()
+	// fmt.Println(a.name)
 
 	b := B{}
 	b.Prt()
 	// fmt.Println(b.Name)
 
-	// c := TZ{}
-	// c.Prt()
+	// method value
 	var c TZ
 	c.Prt()
+
+	// method exp
+	(*TZ).Prt(&c)
+}
+
+type TZ int
+
+type A struct {
+	name string
 }
 
 func (x *TZ) Prt() {
@@ -32,8 +36,9 @@ func (x *TZ) Prt() {
 }
 
 func (x *A) Prt() {
-	x.Name = "AA"
-	fmt.Println(x, x.Name)
+	fmt.Println(x, x.name)
+	x.name = "AA"
+	fmt.Println(x, x.name)
 }
 
 func (x B) Prt() {
