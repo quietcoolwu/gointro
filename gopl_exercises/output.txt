@@ -1,6 +1,0 @@
-0.01s       81  http://baidu.com
-0.39s   249780  http://qq.com
-0.47s   122214  http://taobao.com
-2.19s   471233  http://yahoo.com
-2.73s   233856  http://amazon.com
-3.21s    15773  http://live.com
